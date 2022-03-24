@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "C:\\Users\\Hussam-PC\\.virtualenvs\\tweetme2-Her7WkDf\\Scripts\\python.exe"
+	}
 }
