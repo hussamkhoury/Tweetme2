@@ -1,21 +1,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Dynamic content:</h1>
-<div id="tweets">
+<div class="row text-center">
+    <div class="col">
+        <h1>Welcome to TweetMe</h1>
+    </div>
+</div>
+<div class="row" id="tweets">
     Loading....
 </div>
-
-
 
 <script>
 const tweets = document.getElementById("tweets")
 
 // ============== functions ================= //
+/*
+* function to format the tweet
+* Input : tweet object
+* output : formated string containing tweet inormation
+*/
 function formatTweet(tweet)
 {
-    var formatedTweet = "<div class='mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p></div>";
+    var formatedTweet = "<div class='col-12 col-md-12 mx-auto border rounded py-4 mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p><div class='btn-group'>"+likeBtn(tweet)+"</div></div>";
     return formatedTweet
+}
+/*
+* function add a like button to the tweet
+* Input : tweet object
+* output : formated string containing the button
+*/
+function likeBtn(tweet)
+{
+    likeButton = "<button class='btn btn-primary btn-sm' onclick=handleDidLike("+tweet.likes+")>"+tweet.likes+" Likes</button>";
+    return likeButton;
+}
+/*
+* function to handle like button logic 
+* Input : tweet likes numbers
+* output : logging the like count (for now -> updated in the future)
+*/
+function handleDidLike(likesNumber)
+{
+    console.log(likesNumber);
 }
 // =================== Ajax Request ================ // 
 const xhr = new XMLHttpRequest()

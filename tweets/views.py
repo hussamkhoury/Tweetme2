@@ -1,3 +1,4 @@
+from random import randint
 from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render
 
@@ -12,7 +13,8 @@ def home_tweets_list_view(request):
     """
     Rest API to be Consumed bu javascipt
     """
-    tweets = [{ "id" : tweet.id, "content" : tweet.content} for tweet in Tweet.objects.all()]
+    tweets = [{ "id" : tweet.id, "content" : tweet.content, "likes": randint(0,100)} for tweet in Tweet.objects.all()]
+    print(tweets)
     data = {
         "response" : tweets
     }
