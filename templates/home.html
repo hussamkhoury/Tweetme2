@@ -1,5 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Dynamic content: {{ response }}</h1>
+<h1>Dynamic content:</h1>
+<div id="tweets">
+    Loading....
+</div>
+
+
+
+<script>
+const tweets = document.getElementById("tweets")
+
+// ============== functions ================= //
+function formatTweet(tweet)
+{
+    var formatedTweet = "<div class='mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p></div>";
+    return formatedTweet
+}
+// =================== Ajax Request ================ // 
+const xhr = new XMLHttpRequest()
+const method = "GET"
+const url = "/tweets"
+const responseType = "json"
+
+xhr.responseType = responseType
+xhr.open(method, url)
+xhr.onload = function(){
+    const serverRespone = xhr.response;
+    const listedItem = serverRespone.response;
+    var finalTweetStr = "";
+    var i;
+    for(i=0; i<listedItem.length; i++)
+    {
+        var tweet = formatTweet(listedItem[i])
+        finalTweetStr += tweet;
+    }
+    tweets.innerHTML = finalTweetStr;
+    console.log(finalTweetStr);
+}
+xhr.send()
+// =================== Ajax Request ================ //
+</script>
 {% endblock content %}

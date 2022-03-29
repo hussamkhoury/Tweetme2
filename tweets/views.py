@@ -3,6 +3,23 @@ from django.shortcuts import render
 
 from .models import Tweet
 
+def home_view(request):
+    template = 'home.html'
+    context = {}
+    return render(request, template, context)
+
+def home_tweets_list_view(request):
+    """
+    Rest API to be Consumed bu javascipt
+    """
+    tweets = [{ "id" : tweet.id, "content" : tweet.content} for tweet in Tweet.objects.all()]
+    data = {
+        "response" : tweets
+    }
+    template = 'home.html'
+    # return render(request, template, data, status=200)
+    return JsonResponse(data)
+
 def home_tweet_detail_view(request, tweet_id):
     """
     Rest API to be Consumed bu javascipt
@@ -20,10 +37,3 @@ def home_tweet_detail_view(request, tweet_id):
         # raise Http404
     return JsonResponse(data, status=status)
 
-def home_tweets_list_view(request):
-    tweets = [{ "id" : tweet.id, "content" : tweet.content} for tweet in Tweet.objects.all()]
-    data = {
-        "response" : tweets
-    }
-    template = 'home.html'
-    return render(request, template, data, status=200)
