@@ -16,11 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from tweets.views import home_view, home_tweets_list_view, home_tweet_detail_view
+from tweets.views import (
+    home_view, 
+    home_tweets_list_view, 
+    home_tweet_detail_view,
+    tweet_create_view
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home_view, name='home_view'), # main page
     path('tweets/', home_tweets_list_view, name='home_tweets_list_view'), # API to load dynamic content into main page(/home)
-    path('home/<int:tweet_id>', home_tweet_detail_view, name='home_tweet_detail')
+    path('home/<int:tweet_id>', home_tweet_detail_view, name='home_tweet_detail'),
+    path('create-tweet/', tweet_create_view, name='tweet_create')
 ]
