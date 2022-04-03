@@ -27,6 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', home_view, name='home_view'), # main page
     path('tweets/', home_tweets_list_view, name='home_tweets_list_view'), # API to load dynamic content into main page(/home)
-    path('home/<int:tweet_id>', home_tweet_detail_view, name='home_tweet_detail'),
-    path('create-tweet/', tweet_create_view, name='tweet_create')
+    path('home/<int:tweet_id>', home_tweet_detail_view, name='home_tweet_detail'), # view tweets details by tweet Id
+    path('create-tweet/', tweet_create_view, name='tweet_create') # create new tweets
 ]
