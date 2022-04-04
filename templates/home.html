@@ -8,7 +8,7 @@
 </div>
 <div class="row mb-3">
     <div class="col-md-4 mx-auto col-10">
-        <form method="POST" action="/create-tweet/">
+        <form method="POST" id="tweet-create-form" action="/create-tweet/">
             {% csrf_token %}
             <input type="hidden" value="/home/" name="next">
             <textarea class="form-control" name="content" placeholder="Your Tweet..."></textarea>
@@ -21,7 +21,13 @@
 </div>
 
 <script>
-const tweets = document.getElementById("tweets")
+
+// ============== Main ================= //    
+const tweetElemnet = document.getElementById("tweets")
+loadTweet(tweetElemnet)
+const tweetFormElement = document.getElementById("tweet-create-form")
+tweetFormElement.addEventListener("submit", handleTweetCreateForm)
+// ============== Main ================= //
 
 // ============== functions ================= //
 /*
@@ -34,6 +40,7 @@ function formatTweet(tweet)
     var formatedTweet = "<div class='col-12 col-md-12 mx-auto border rounded py-4 mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p><div class='btn-group'>"+likeBtn(tweet)+"</div></div>";
     return formatedTweet
 }
+
 /*
 * function add a like button to the tweet
 * Input : tweet object
@@ -44,6 +51,7 @@ function likeBtn(tweet)
     likeButton = "<button class='btn btn-primary btn-sm' onclick=handleDidLike("+tweet.likes+")>"+tweet.likes+" Likes</button>";
     return likeButton;
 }
+
 /*
 * function to handle like button logic 
 * Input : tweet likes numbers
@@ -53,28 +61,62 @@ function handleDidLike(likesNumber)
 {
     console.log(likesNumber);
 }
-// =================== Ajax Request ================ // 
-const xhr = new XMLHttpRequest()
-const method = "GET"
-const url = "/tweets"
-const responseType = "json"
 
-xhr.responseType = responseType
-xhr.open(method, url)
-xhr.onload = function(){
-    const serverRespone = xhr.response;
-    const listedItem = serverRespone.response;
-    var finalTweetStr = "";
-    var i;
-    for(i=0; i<listedItem.length; i++)
-    {
-        var tweet = formatTweet(listedItem[i])
-        finalTweetStr += tweet;
+/*
+* function to handle like button logic 
+* Input : tweet likes numbers
+* output : logging the like count (for now -> updated in the future)
+*/
+function loadTweet(tweetElemnet)
+{
+    // Ajax Request
+    const xhr = new XMLHttpRequest()
+    const method = "GET"
+    const url = "/tweets"
+    const responseType = "json"
+
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function(){
+        const serverRespone = xhr.response;
+        const listedItem = serverRespone.response;
+        var finalTweetStr = "";
+        var i;
+        for(i=0; i<listedItem.length; i++)
+        {
+            var tweet = formatTweet(listedItem[i])
+            finalTweetStr += tweet;
+        }
+        tweetElemnet.innerHTML = finalTweetStr;
+        console.log(finalTweetStr);
     }
-    tweets.innerHTML = finalTweetStr;
-    console.log(finalTweetStr);
+    xhr.send()
 }
-xhr.send()
-// =================== Ajax Request ================ //
+
+/*
+* function add a like button to the tweet
+* Input : tweet object
+* output : formated string containing the button
+*/
+function handleTweetCreateForm(event)
+{
+    // when console.log(event) you can check all the attributes
+    event.preventDefault()
+    const myForm = event.target // target attribute contain the actual form <form.../>
+    const myFormData = new FormData(myForm) // built in class to make the form like dictionary from attributes
+    const url = myForm.getAttribute("action") // contain the url
+    const method = myForm.getAttribute("method")
+    xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.onload = function()
+    {
+        const serverResponse = xhr.response
+        const tweetElement = document.getElementById("tweets")
+        loadTweet(tweetElement)
+    }
+    xhr.send(myFormData)
+}
+// =================== functions ================ // 
+
 </script>
 {% endblock content %}
