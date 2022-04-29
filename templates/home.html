@@ -33,7 +33,7 @@ tweetFormElement.addEventListener("submit", handleTweetCreateForm)
 /*
 * function to format the tweet
 * Input : tweet object
-* output : formated string containing tweet inormation
+* output : formated string containing tweet information
 */
 function formatTweet(tweet)
 {
@@ -111,10 +111,11 @@ function handleTweetCreateForm(event)
     xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
     xhr.onload = function()
     {
-        const serverResponse = xhr.response
-        console.log(xhr.status, xhr.response)
-        const tweetElement = document.getElementById("tweets")
-        loadTweet(tweetElement)
+        const serverResponse = xhr.response;
+        const newTweet = formatTweet(serverResponse);
+        const tweets = document.getElementById("tweets");
+        console.log(newTweet);
+        tweets.append(newTweet);
     }
     xhr.send(myFormData)
 }
