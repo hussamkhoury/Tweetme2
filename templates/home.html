@@ -11,7 +11,7 @@
         <form method="POST" id="tweet-create-form" action="/create-tweet/">
             {% csrf_token %}
             <input type="hidden" value="/home/" name="next">
-            <textarea class="form-control" name="content" placeholder="Your Tweet..."></textarea>
+            <textarea class="form-control" name="content" placeholder="Your Tweet..." required="required"></textarea>
             <button type="submit" class="btn btn-primary">Tweet</button>
         </form>
     </div>
@@ -23,8 +23,8 @@
 <script>
 
 // ============== Main ================= //    
-const tweetElemnet = document.getElementById("tweets")
-loadTweet(tweetElemnet)
+const tweetContainer = document.getElementById("tweets")
+loadTweet(tweetContainer)
 const tweetFormElement = document.getElementById("tweet-create-form")
 tweetFormElement.addEventListener("submit", handleTweetCreateForm)
 // ============== Main ================= //
@@ -37,6 +37,9 @@ tweetFormElement.addEventListener("submit", handleTweetCreateForm)
 */
 function formatTweet(tweet)
 {
+    console.log(tweet.id);
+    console.log(tweet.content);
+    console.log(tweet.likes);
     var formatedTweet = "<div class='col-12 col-md-12 mx-auto border rounded py-4 mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p><div class='btn-group'>"+likeBtn(tweet)+"</div></div>";
     return formatedTweet
 }
@@ -63,9 +66,9 @@ function handleDidLike(likesNumber)
 }
 
 /*
-* function to handle like button logic 
-* Input : tweet likes numbers
-* output : logging the like count (for now -> updated in the future)
+* function to all tweets 
+* Input : empty tweet container
+* output : return all the tweets using ajax response
 */
 function loadTweet(tweetElemnet)
 {
@@ -93,9 +96,9 @@ function loadTweet(tweetElemnet)
 }
 
 /*
-* function add a like button to the tweet
-* Input : tweet object
-* output : formated string containing the button
+* function to handle tweet form submition and retriving (single tweet)
+* Input : event(tweet object)
+* output : returing the new tweet in an ajax request 
 */
 function handleTweetCreateForm(event)
 {
@@ -105,17 +108,22 @@ function handleTweetCreateForm(event)
     const myFormData = new FormData(myForm) // built in class to make the form like dictionary from attributes
     const url = myForm.getAttribute("action") // contain the url
     const method = myForm.getAttribute("method")
+    const responseType = "json"
+
     xhr = new XMLHttpRequest()
+    xhr.responseType = responseType
     xhr.open(method, url)
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
     xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
     xhr.onload = function()
     {
-        const serverResponse = xhr.response;
-        const newTweet = formatTweet(serverResponse);
-        const tweets = document.getElementById("tweets");
-        console.log(newTweet);
-        tweets.append(newTweet);
+        const serverResponse = xhr.response
+        console.log(serverResponse)
+        const newTweet = formatTweet(serverResponse)
+        //const tweets = document.getElementById("tweets");
+        const inner_html = tweetContainer.innerHTML
+        tweetContainer.innerHTML = newTweet + inner_html
+        myForm.reset()
     }
     xhr.send(myFormData)
 }
