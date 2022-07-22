@@ -13,6 +13,7 @@
             <input type="hidden" value="/home/" name="next">
             <textarea class="form-control" name="content" placeholder="Your Tweet..." required='required'></textarea>
             <button type="submit" class="btn btn-primary">Tweet</button>
+            <div class="d-none alert alert-danger" id="create-form-error-message"></div>
         </form>
     </div>
 </div>
@@ -119,6 +120,7 @@ function handleTweetCreateForm(event)
     {
         if (xhr.status === 201) // create response
         {
+            handleTweetCreateFormErrors("", false)
             const serverResponse = xhr.response
             console.log(serverResponse)
             const newTweet = formatTweet(serverResponse)
@@ -129,7 +131,8 @@ function handleTweetCreateForm(event)
         }
         else if (xhr.status === 400) {
             const jsonError = xhr.response
-            alert(jsonError.content)
+            let errorMessage = jsonError.content
+            handleTweetCreateFormErrors(errorMessage, true)
         }
         else if (xhr.status === 500) {
             alert("Sorry!! there is a server error please try again.")
@@ -141,5 +144,17 @@ function handleTweetCreateForm(event)
     xhr.send(myFormData)
 }
 
+function handleTweetCreateFormErrors(message, display) {
+    const messageLocation = document.getElementById("create-form-error-message")
+    if(display){
+        // show error message
+        messageLocation.setAttribute("class", "d-bloch alert alert-danger")
+        messageLocation.innerText = message
+    }
+    else{
+        // don't show error message
+        messageLocation.setAttribute("class", "d-none alert alert-danger")
+    }
+}
 </script>
 {% endblock content %}
