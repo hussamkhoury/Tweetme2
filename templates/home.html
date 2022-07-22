@@ -11,7 +11,7 @@
         <form method="POST" id="tweet-create-form" action="/create-tweet/">
             {% csrf_token %}
             <input type="hidden" value="/home/" name="next">
-            <textarea class="form-control" name="content" placeholder="Your Tweet..." required="required"></textarea>
+            <textarea class="form-control" name="content" placeholder="Your Tweet..." required='required'></textarea>
             <button type="submit" class="btn btn-primary">Tweet</button>
         </form>
     </div>
@@ -105,7 +105,7 @@ function handleTweetCreateForm(event)
     // when console.log(event) you can check all the attributes
     event.preventDefault()
     const myForm = event.target // target attribute contain the actual form <form.../>
-    const myFormData = new FormData(myForm) // built in class to make the form like dictionary from attributes
+    const myFormData = new FormData(myForm) // built in class to make the form data like dictionary from attributes
     const url = myForm.getAttribute("action") // contain the url
     const method = myForm.getAttribute("method")
     const responseType = "json"
@@ -117,17 +117,29 @@ function handleTweetCreateForm(event)
     xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
     xhr.onload = function()
     {
-        const serverResponse = xhr.response
-        console.log(serverResponse)
-        const newTweet = formatTweet(serverResponse)
-        //const tweets = document.getElementById("tweets");
-        const inner_html = tweetContainer.innerHTML
-        tweetContainer.innerHTML = newTweet + inner_html
-        myForm.reset()
+        if (xhr.status === 201) // create response
+        {
+            const serverResponse = xhr.response
+            console.log(serverResponse)
+            const newTweet = formatTweet(serverResponse)
+            //const tweets = document.getElementById("tweets");
+            const inner_html = tweetContainer.innerHTML
+            tweetContainer.innerHTML = newTweet + inner_html
+            myForm.reset()
+        }
+        else if (xhr.status === 400) {
+            const jsonError = xhr.response
+            alert(jsonError.content)
+        }
+        else if (xhr.status === 500) {
+            alert("Sorry!! there is a server error please try again.")
+        }
+    }
+    xhr.onerror = function() {
+        alert("there is an erorr the request can't be sent!!")
     }
     xhr.send(myFormData)
 }
-// =================== functions ================ // 
 
 </script>
 {% endblock content %}
