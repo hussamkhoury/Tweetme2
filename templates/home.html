@@ -132,7 +132,19 @@ function handleTweetCreateForm(event)
         else if (xhr.status === 400) {
             const jsonError = xhr.response
             let errorMessage = jsonError.content
-            handleTweetCreateFormErrors(errorMessage, true)
+            let error;
+            if(errorMessage){
+                error = errorMessage[0]
+                if(error){
+                    handleTweetCreateFormErrors(error, true)    
+                }
+                else{
+                alert("there is an error!! please try agin later....")
+                }
+            }
+            else{
+                alert("there is an error!! please try agin later....")
+            }
         }
         else if (xhr.status === 500) {
             alert("Sorry!! there is a server error please try again.")
