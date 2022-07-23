@@ -42,10 +42,17 @@ def home_tweet_detail_view(request, tweet_id):
     return JsonResponse(data, status=status)
 
 def tweet_create_view(request):
+    user = request.user
+    if not request.user.is_authenticated:
+        user = None
+        if request.is_ajax():
+            return JsonResponse({}, status= 401) # 401 -> not authenticated
+        return redirect(settings.LOGIN_URL)
     form = TweetForm(request.POST or None)
     next_url = request.POST.get("next")
     if form.is_valid():
         obj = form.save(commit=False)
+        obj.user = user
         obj.save()
         form = TweetForm()
         if request.is_ajax():

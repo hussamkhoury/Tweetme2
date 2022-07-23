@@ -146,6 +146,10 @@ function handleTweetCreateForm(event)
                 alert("there is an error!! please try agin later....")
             }
         }
+        else if (xhr.status === 401) {
+            alert("user is unauthorized!! please login.")
+            window.location.href = "/login"
+        }
         else if (xhr.status === 500) {
             alert("Sorry!! there is a server error please try again.")
         }
