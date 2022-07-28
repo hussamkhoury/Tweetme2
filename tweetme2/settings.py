@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # thied party
+    'rest_framework',
+    # internal
     'tweets'
 ]
 
@@ -121,3 +124,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/login'
+
+MAX_TWEET_LENGHT = 240
