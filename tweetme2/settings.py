@@ -126,3 +126,12 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/login'
 
 MAX_TWEET_LENGHT = 240
+
+REST_FRAMEWORK = {    
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework.authentication.SessionAuthentication'
+    ],
+    'DEFAULT_RENDERER_CLASSES' : [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}

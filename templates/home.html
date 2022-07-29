@@ -83,7 +83,7 @@ function loadTweet(tweetElemnet)
     xhr.open(method, url)
     xhr.onload = function(){
         const serverRespone = xhr.response;
-        const listedItem = serverRespone.response;
+        const listedItem = serverRespone;
         var finalTweetStr = "";
         var i;
         for(i=0; i<listedItem.length; i++)
@@ -147,6 +147,10 @@ function handleTweetCreateForm(event)
             }
         }
         else if (xhr.status === 401) {
+            alert("user is unauthorized!! please login.")
+            window.location.href = "/login"
+        }
+        else if (xhr.status === 403) {
             alert("user is unauthorized!! please login.")
             window.location.href = "/login"
         }
