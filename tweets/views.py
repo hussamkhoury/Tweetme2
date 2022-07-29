@@ -59,6 +59,19 @@ def tweet_create_view(request):
         return JsonResponse(serializer.data, status=201)
     return JsonResponse({}, status=400)    
 
+@api_view(['DELETE', 'POST'])
+@permission_classes([IsAuthenticated])
+def tweet_delete_view(request, tweet_id):
+    qs = Tweet.objects.filter(id=tweet_id)
+    if not qs.exists():
+        return Response({}, status=404)
+    qs = qs.filter(user=request.user)
+    if not qs.exists():
+        return Response({"message":"You are not allowed to delete this tweet!"}, status=403)
+    obj = qs.first()
+    obj.delete()
+    return Response({"message":"Tweet Removed"}, status=200)
+
 #------ using pure django ---------#
 def tweet_create_view_pure_django(request):
     user = request.user
