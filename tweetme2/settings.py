@@ -127,6 +127,8 @@ LOGIN_URL = '/login'
 
 MAX_TWEET_LENGHT = 240
 
+TWEET_ACTIONS_OPTIONS = ["like","unlike","retweet"]
+
 DEFAULT_RENDERER_CLASSES = [
     'rest_framework.renderers.JSONRenderer',
 ]
