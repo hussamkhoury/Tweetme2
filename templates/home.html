@@ -32,6 +32,27 @@ tweetFormElement.addEventListener("submit", handleTweetCreateForm)
 
 // ============== functions ================= //
 /*
+* function to get CSRF Token
+* Input : name
+* output : token
+*/
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+/*
 * function to format the tweet
 * Input : tweet object
 * output : formated string containing tweet information
@@ -41,19 +62,14 @@ function formatTweet(tweet)
     console.log(tweet.id);
     console.log(tweet.content);
     console.log(tweet.likes);
-    var formatedTweet = "<div class='col-12 col-md-12 mx-auto border rounded py-4 mb-4 tweet' id='tweet-"+tweet.id+"'><p>"+tweet.content+"</p><div class='btn-group'>"+likeBtn(tweet)+"</div></div>";
+    var formatedTweet = "<div class='col-12 col-md-12 mx-auto border rounded py-4 mb-4 tweet' id='tweet-"
+    +tweet.id+"'><p>"
+    +tweet.content+"</p><div class='btn-group'>"
+    +likeBtn(tweet)
+    +unLikeBtn(tweet)
+    +retweetBtn(tweet)
+    +"</div></div>"
     return formatedTweet
-}
-
-/*
-* function add a like button to the tweet
-* Input : tweet object
-* output : formated string containing the button
-*/
-function likeBtn(tweet)
-{
-    likeButton = "<button class='btn btn-primary btn-sm' onclick=handleDidLike("+tweet.likes+")>"+tweet.likes+" Likes</button>";
-    return likeButton;
 }
 
 /*
@@ -61,9 +77,58 @@ function likeBtn(tweet)
 * Input : tweet likes numbers
 * output : logging the like count (for now -> updated in the future)
 */
-function handleDidLike(likesNumber)
+function handleTweetAction(tweet_id, tweet_action)
 {
-    console.log(likesNumber);
+    const csrfToken = getCookie("csrftoken")
+    const url = '/api/tweet/action'
+    const method = 'POST'
+    const data = JSON.stringify({
+        id: tweet_id,
+        action: tweet_action
+    })
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
+    xhr.setRequestHeader("X-CSRFToken", csrfToken)
+    xhr.onload = function() {
+        loadTweet(tweetContainer);
+    }
+    xhr.send(data)
+}
+
+/*
+* function add a like button to the tweet
+* Input : tweet object, action type == like
+* output : formated string containing the button
+*/
+function likeBtn(tweet)
+{
+    likeButton = "<button class='btn btn-primary btn-sm' onClick=handleTweetAction("+tweet.id+",'like')>"+tweet.likes+" Likes</button>";
+    return likeButton;
+}
+
+/*
+* function add a like button to the tweet
+* Input : tweet object, action type == unlike
+* output : formated string containing the button
+*/
+function unLikeBtn(tweet)
+{
+    unLikeButton = "<button class='btn btn-outline-primary btn-sm' onClick=handleTweetAction("+tweet.id+",'unlike')>UnLike</button>";
+    return unLikeButton;
+}
+
+/*
+* function add a retweet button to the tweet
+* Input : tweet object, action type == retweet
+* output : formated string containing the button
+*/
+function retweetBtn(tweet)
+{
+    retweetButton = "<button class='btn btn-outline-success btn-sm' onClick=handleTweetAction("+tweet.id+",'retweet')>Retweet</button>";
+    return retweetButton;
 }
 
 /*
