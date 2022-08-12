@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from tweets.views import (
     home_view, 
@@ -31,6 +31,5 @@ urlpatterns = [
     path('tweets/', home_tweets_list_view, name='home_tweets_list_view'), # API to load dynamic content into main page(/home)
     path('home/<int:tweet_id>', home_tweet_detail_view, name='home_tweet_detail'), # view tweets details by tweet Id
     path('create-tweet/', tweet_create_view, name='tweet_create'), # create new tweets
-    path('api/tweet/<int:tweet_id>/delete', tweet_delete_view, name='tweet_delete'), # view tweets details by tweet Id
-    path('api/tweet/action', tweet_action_view)
+    path('api/tweets/', include('tweets.urls'))
 ]
