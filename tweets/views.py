@@ -11,8 +11,11 @@ from rest_framework.response import Response
 
 from .models import Tweet
 from .forms import TweetForm
-from .serializer import TweetSerializer
-from .serializer import TweetActionSerializer
+from .serializer import (
+    TweetSerializer,
+    TweetActionSerializer,
+    TweetCreateSerializer
+)
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -92,14 +95,16 @@ def tweet_action_view(request, *args, **kwargs):
             return Response(serializer.data, status=200)
         elif action == "unlike":
             obj.likes.remove(request.user)
+            serializer = TweetSerializer(obj)
+            return Response(serializer.data, status=200)
         elif action == "retweet":
             new_tweet = Tweet.objects.create(
                 user=request.user,
                 parent=obj,
                 content = content
             )
-            serializer = TweetSerializer(data=new_tweet)
-            return Response(serializer.data, status=200)
+            serializer = TweetSerializer(new_tweet)
+            return Response(serializer.data, status=201)
     return Response({}, status=200)
 
 #------ using pure django ---------#
