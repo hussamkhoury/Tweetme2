@@ -12,6 +12,7 @@ class TweetLike(models.Model):
 
 class Tweet(models.Model):
     # id = models.AutoField(PRIMARY_KEY=True) Automaticaly added by django
+    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     content = models.TextField(blank=True, null=True) # null for DB, blank for django
     likes = models.ManyToManyField(User, related_name='tweet_user', blank=True, through=TweetLike)
