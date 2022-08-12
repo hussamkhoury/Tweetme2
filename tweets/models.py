@@ -21,8 +21,14 @@ class Tweet(models.Model):
     
     class Meta:
         ordering = ['-id']
-        
+
+    @property
+    def is_retweet(self):
+        return self.parent != None
     def serialize(self):
+        '''
+        Old serializing method, not used any more
+        '''
         return {
             "id": self.id,
             "content": self.content,

@@ -54,7 +54,7 @@ def home_tweets_list_view(request):
 # @authentication_classes([SessionAuthentication])  # included in default authentication in settings
 @permission_classes([IsAuthenticated])
 def tweet_create_view(request):
-    serializer = TweetSerializer(data=request.POST or None)
+    serializer = TweetCreateSerializer(data=request.POST or None)
     if serializer.is_valid():
         serializer.save(user=request.user)
         return JsonResponse(serializer.data, status=201)
