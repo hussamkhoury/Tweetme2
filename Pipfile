@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "==2.2"
 djangorestframework = "*"
+django = "==2.2"
 
 [dev-packages]
 pylint = "*"

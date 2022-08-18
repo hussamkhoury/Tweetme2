@@ -80,7 +80,7 @@ function formatTweet(tweet)
 function handleTweetAction(tweet_id, tweet_action)
 {
     const csrfToken = getCookie("csrftoken")
-    const url = '/api/tweet/action'
+    const url = '/api/tweets/action/'
     const method = 'POST'
     const data = JSON.stringify({
         id: tweet_id,
