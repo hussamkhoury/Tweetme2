@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 djangorestframework = "*"
 django = "==2.2"
+django-cors-headers = "==3.2.0"
 
 [dev-packages]
 pylint = "*"
